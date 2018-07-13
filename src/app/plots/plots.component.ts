@@ -33,7 +33,7 @@ export class PlotsComponent implements OnInit {
     frequencyResponse = this.sealed.calcResponses(driver),
     lineFunction = d3.line()
       .x(function(d) { return d.F * 3; } )
-      .y(function(d) { return 800 - Math.round(d.SPLt * 3); } )
+      .y(function(d) { return 400 - Math.round(d.SPLt * 3); } )
       .curve(d3.curveCardinal);
 
       frequencyResponse.forEach( plot => {

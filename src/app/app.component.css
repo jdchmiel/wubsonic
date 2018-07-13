@@ -1,0 +1,26 @@
+app-driver-selector,
+app-box-style-selector,
+app-plot-selector,
+app-settings,
+app-next-action {
+  display: block;
+  border: 1px solid #000;
+}
+
+menu {
+  display: block;
+  border: 1px solid #000;
+  width: 10%;
+  padding: 0;
+  text-align: center;
+  float: left;
+}
+
+menu p {
+  font: 12pt arial;
+}
+
+menu h1 {
+  font: 16pt arial;
+  font-weight: bold;
+}

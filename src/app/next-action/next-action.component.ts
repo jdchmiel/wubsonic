@@ -7,7 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NextActionComponent implements OnInit {
 
-  constructor() { }
+  bestAction: string;
+  constructor() {
+    this.bestAction = 'Choose Driver';
+  }
 
   ngOnInit() {
   }
