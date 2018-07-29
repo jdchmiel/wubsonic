@@ -25,3 +25,23 @@ menu h1 {
   font: 16pt arial;
   font-weight: bold;
 }
+
+div.hidden {
+  display: none;
+}
+
+.active {
+  display: block;
+  height: 500px;
+  width: 500px;
+  position: absolute;
+  z-index: 100;
+  left: 10%;
+  border: 1px solid#000;
+  background-color: #fff;
+  opacity: .85;
+}
+
+::ng-deep .closer {
+  float:right;
+}

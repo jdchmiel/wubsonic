@@ -1,41 +1,15 @@
-export interface Response {
-  F: number;      // frequency (Hz)
-  dBmag: number;  // SPL 1W/1M at frequency F
-  SPLd: number;   // displacement-limited SPL at F (dB)
-  Pmax: number;   // power required to produce SPLd at F (W)
-  SPLt: number;   // thermally-limited SPL at F (dB)
-}
+import { Driver, Box, Plot, Response} from '../../wubTypes';
+import { Injectable } from '@angular/core';
 
-export interface Box {
-  Qtc: number;    // Final Q of the system at resonance
-  Fb: number;     // resonance frequency of the system
-  F3: number;     // -3dB frequency (Hz)
-  Vb: number;     // net box volume (litres)
-}
 
-export interface Driver {
-  Name: string;   // identifier of the speaker driver
-  Vas: number;    // equivalent air compliance (litres)
-  Qes: number;    // electrical Q of driver at resonance
-  Qms: number;    // mechanical Q of the driver
-  Qts: number;    // total Q of the driver at Fs
-  Fs: number;     // resonance frequency of driver (Hz)
-  PEmax: number;  // maximum input power for driver (W)
- // Fb: number;     // resonance frequency of the system (Hz)
-  Sd: number;     // effective surface area (cone + 1/3 surround) (cm^3)
-  Xmax: number;   // peak linear displacement of cone (mm)
-}
-
-export interface Plot {
-  Box: Box;
-  Responses: Array<Response>;
-}
 
 const Qlist = [0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.4, 1.6, 2],
     Frequencies = [1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130,
        140, 150, 160, 170, 180, 190, 200, 300, 400, 800, 1000, 2000, 4000, 8000, 10000, 20000],
     c = 345,        // speed of sound in air (345 m/s)
     Ro = 1.18;      // density of air (1.18 kg/m^3)
+
+@Injectable()
 
 export class SealedGrapher {
 
@@ -111,4 +85,3 @@ export class SealedGrapher {
     return Plots;
   }
 }
-

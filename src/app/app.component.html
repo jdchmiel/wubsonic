@@ -1,9 +1,13 @@
 <menu>
  <h1>{{ title }}!</h1>
-  <app-driver-selector></app-driver-selector>
-  <app-box-style-selector></app-box-style-selector>
-  <app-plot-selector></app-plot-selector>
-  <app-settings></app-settings>
+  <p (click)='clickOpen(choices.drivers);'>Choose Driver</p>
+  <app-driver-selector  [(active)]="active" *ngIf="active == choices.drivers" class='active'></app-driver-selector>
+  <p (click)='clickOpen(choices.boxes);'>Box Style</p>
+  <app-box-style-selector  [(active)]="active" *ngIf="active == choices.boxes" class='active'></app-box-style-selector>
+  <p (click)='clickOpen(choices.plots);'>Choose Plots</p>
+  <app-plot-selector  [(active)]="active" *ngIf="active == choices.plots" class='active'></app-plot-selector>
+  <p (click)='clickOpen(choices.settings);'>Settings</p>
+  <app-settings [(active)]="active" *ngIf="active == choices.settings" class='active'></app-settings>
   <app-next-action></app-next-action>
 </menu>
   <app-plots></app-plots>

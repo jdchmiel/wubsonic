@@ -1,19 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
-import { SealedGrapher, Plot, Response } from '../graphers/sealed';
+import { SealedGrapher } from '../../services/graphers/sealed';
+import {Plot, Response} from '../../wubTypes';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-plots',
   templateUrl: './plots.component.html',
-  styleUrls: ['./plots.component.css']
+  styleUrls: ['./plots.component.css'],
+  providers: [SealedGrapher]
 })
 export class PlotsComponent implements OnInit {
   radius = 5;
-  sealed = new SealedGrapher();
 
-  constructor() { }
+  constructor(private sealed: SealedGrapher, private settings: SettingsService) {
+    console.log('plots constructor');
+
+    this.settings.refreshChange.subscribe( data => {
+        console.log('subscribed to refresh', data);
+      if (data === true) {
+        console.log('subscribed to refresh');
+        this.settings.refresh = false;
+        this.clearMe();
+        this.clickPressMe();
+      }
+    });
+  }
 
   ngOnInit() {
+    console.log('plots init');
+  }
+
+  clearMe() {
+     //  const svg = d3.select('.plotA'); // todo move this to root of component?
   }
 
   clickPressMe() {
@@ -42,9 +61,10 @@ export class PlotsComponent implements OnInit {
       frequencyResponse = this.sealed.calcResponses(driver),
       lineFunction = d3.line<Response>()
         .x(function (d: any) { return xScale(d.F); })
-        .y(function (d: any) { console.log(xScale(d.F), yScale(d.SPLt)); return yScale(d.SPLt  );  })
+        .y(function (d: any) { return yScale(d.SPLt  );  })
         .curve(d3.curveCardinal);
 
+      svg.selectAll('*').remove();
     frequencyResponse.forEach((plot: Plot) => {
       svg
         .append('path')
