@@ -52,9 +52,10 @@ export class SealedGrapher {
     boxes = this.calcBoxes(driver);
     boxes.forEach(box => {
       const
-        Vd = driver.Sd * driver.Xmax / 1000,
+        Vd = driver.Sd * driver.Xmax / 10000,
         n0 = 9.64 * Math.pow(10, -10) * Math.pow(driver.Fs, 3) * driver.Vas / driver.Qes,
         SPL = 112 + 10 * Math.log10(n0),
+        // (4*pi^3*Ro/c)*Fb^4*Vd^2
         K1 = (4 * Math.pow(Math.PI, 3) * Ro / c) * Math.pow(box.Fb, 4) * Math.pow(Vd, 2),
         K2 = 112 + 10 * Math.log10(K1),
         Amax =  (box.Qtc > .707
@@ -69,6 +70,7 @@ export class SealedGrapher {
           dBmag = 10 * Math.log10(Math.pow(Fr, 2) / (Math.pow(Fr - 1, 2) + Fr / Math.pow(box.Qtc, 2))),
           // = 10*LOG(Fr^2/((Fr-1)^2+Fr/Qtc^2))
           SPLd = K2 + 40 * Math.log10( F / box.Fb),
+          // K1*((Fr-1)^2+Fr/Qtc^2)/n0
          Pmax = K1 * (  Math.pow(Fr - 1, 2) + Fr / Math.pow(box.Qtc, 2)) / n0,
           SPLt = dBmag + PeakSPL;
 
