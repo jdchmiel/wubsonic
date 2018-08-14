@@ -11,6 +11,7 @@ import { NextActionComponent } from './components/next-action/next-action.compon
 import { PlotsComponent } from './components/plots/plots.component';
 import { SealedGrapher } from './services/graphers/sealed';
 import { SettingsService } from './services/settings.service';
+import { PortedGrapher } from './services/graphers/ported';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { SettingsService } from './services/settings.service';
   ],
   providers: [
     SealedGrapher,
+    PortedGrapher,
     SettingsService
   ],
   bootstrap: [AppComponent]

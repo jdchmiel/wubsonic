@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import * as d3 from 'd3';
 import { SealedGrapher } from '../../services/graphers/sealed';
+import { PortedGrapher } from '../../services/graphers/ported';
 import {Plot, Response} from '../../wubTypes';
 import { SettingsService } from '../../services/settings.service';
 
@@ -14,7 +15,9 @@ export class PlotsComponent implements OnInit {
   radius = 5;
   xScale;
   yScaleSplThermal;
-  yScaleSplPowerMax;
+  yScalePowerMax;
+  yScaleDbMagnitude;
+  yScaleSplDisplacement;
   driver = {
     Name: 'poly buyout',
     Vas: 17.8,
@@ -23,11 +26,11 @@ export class PlotsComponent implements OnInit {
     Qts: .95,
     Fs: 52,
     PEmax: 100,
-    Sd: .0780,
+    Sd: .0182,
     Xmax: 3.5
   };
   frequencyResponse;
-  constructor(private sealed: SealedGrapher, private settings: SettingsService) {
+  constructor(private sealed: SealedGrapher, private ported: PortedGrapher, private settings: SettingsService) {
       this.xScale = d3.scaleLog()
           .domain([Math.min(...this.settings.PlotPointArray), Math.max(...this.settings.PlotPointArray)])
           .range([1, 800]);
@@ -35,20 +38,33 @@ export class PlotsComponent implements OnInit {
           .domain([this.settings.SplThermalLow, this.settings.SplThermalHi])
           .range([200, 1]);
 
-        this.yScaleSplPowerMax = d3.scaleLinear()
-          .domain([this.settings.SplPowerMaxLow, this.settings.SplPowerMaxHi])
+        this.yScalePowerMax = d3.scaleLinear()
+          .domain([this.settings.PowerMaxLow, this.settings.PowerMaxHi])
+          .range([200, 1]);
+        this.yScaleDbMagnitude = d3.scaleLinear()
+          .domain([this.settings.DbMagnitudeLow, this.settings.DbMagnitudeHi])
+          .range([200, 1]);
+        this.yScaleSplDisplacement = d3.scaleLinear()
+          .domain([this.settings.SplDisplacementLow, this.settings.SplDisplacementHi])
           .range([200, 1]);
 
 
       this.frequencyResponse = this.sealed.calcResponses(this.driver),
+      this.frequencyResponse.push(this.ported.calcResponse(this.driver));
     this.settings.refreshChange.subscribe( data => {
       if (data === true) {
         this.settings.refresh = false;
         this.yScaleSplThermal = d3.scaleLinear()
           .domain([this.settings.SplThermalLow, this.settings.SplThermalHi])
           .range([200, 1]);
-        this.yScaleSplPowerMax = d3.scaleLinear()
-          .domain([this.settings.SplPowerMaxLow, this.settings.SplPowerMaxHi])
+        this.yScalePowerMax = d3.scaleLinear()
+          .domain([this.settings.PowerMaxLow, this.settings.PowerMaxHi])
+          .range([200, 1]);
+          this.yScaleDbMagnitude = d3.scaleLinear()
+          .domain([this.settings.DbMagnitudeLow, this.settings.DbMagnitudeHi])
+          .range([200, 1]);
+        this.yScaleSplDisplacement = d3.scaleLinear()
+          .domain([this.settings.SplDisplacementLow, this.settings.SplDisplacementHi])
           .range([200, 1]);
         this.drawCharts();
       }
@@ -72,10 +88,10 @@ export class PlotsComponent implements OnInit {
       svgC = d3.select('.plotC'),
       svgD = d3.select('.plotD');
 
-    this.drawSplThermal(svgA);
-    this.drawSplPowerMax(svgB);
-    this.drawSplThermal(svgC);
-    this.drawSplThermal(svgD);
+    this.drawSplPowerMax(svgA);
+    this.drawSplThermal(svgB);
+    this.drawDbMagnitude(svgC);
+    this.drawSplDisplacement(svgD);
   }
 
   drawSplPowerMax(svg) {
@@ -84,15 +100,15 @@ export class PlotsComponent implements OnInit {
       lineFunction = d3.line<Response>()
         .x( (d: any) => this.xScale(d.F) )
         .y( (d: any) => {
-          console.log(
-            'F:', d.F,
-            'Fx:', this.xScale(d.F),
-            // d.Pmax,
-            this.yScaleSplPowerMax(d.Pmax),
-            // d.SPLt,
-            this.yScaleSplThermal(d.SPLt),
-          );
-          return this.yScaleSplPowerMax(d.Pmax); } )
+         // console.log(
+           // 'F:', d.F,
+           // 'Fx:', this.xScale(d.F),
+           // d.Pmax,
+           // this.yScalePowerMax(d.Pmax),
+           // d.SPLt,
+           // this.yScaleSplThermal(d.SPLt),
+          // );
+          return this.yScalePowerMax(d.Pmax); } )
         .curve(d3.curveCardinal);
 
     this.frequencyResponse.forEach((plot: Plot) => {
@@ -104,7 +120,7 @@ export class PlotsComponent implements OnInit {
         .attr('fill', 'none');
     });
     this.drawGraduationFrequencies(svg);
-    this.drawSplLines(svg, this.settings.SplPowerMaxLow, this.settings.SplPowerMaxHi, this.yScaleSplPowerMax );
+    this.drawSplLines(svg, this.settings.PowerMaxLow, this.settings.PowerMaxHi, this.yScalePowerMax );
   }
 
   drawSplThermal(svg) {
@@ -125,6 +141,45 @@ export class PlotsComponent implements OnInit {
     });
     this.drawGraduationFrequencies(svg);
     this.drawSplLines(svg, this.settings.SplThermalLow, this.settings.SplThermalHi, this.yScaleSplThermal );
+  }
+
+  drawDbMagnitude(svg) {
+    this.clearMe(svg);
+    const
+      lineFunction = d3.line<Response>()
+        .x( (d: any) => this.xScale(d.F) )
+        .y( (d: any) => this.yScaleDbMagnitude(d.dBmag) )
+        .curve(d3.curveCardinal);
+
+    this.frequencyResponse.forEach((plot: Plot) => {
+      svg
+        .append('path')
+        .attr('d', lineFunction(plot.Responses))
+        .attr('stroke', 'blue')
+        .attr('stroke-width', 1)
+        .attr('fill', 'none');
+    });
+    this.drawGraduationFrequencies(svg);
+    this.drawSplLines(svg, this.settings.DbMagnitudeLow, this.settings.DbMagnitudeHi, this.yScaleDbMagnitude );
+  }
+  drawSplDisplacement(svg) {
+    this.clearMe(svg);
+    const
+      lineFunction = d3.line<Response>()
+        .x( (d: any) => this.xScale(d.F) )
+        .y( (d: any) => this.yScaleSplDisplacement(d.SPLd) )
+        .curve(d3.curveCardinal);
+
+    this.frequencyResponse.forEach((plot: Plot) => {
+      svg
+        .append('path')
+        .attr('d', lineFunction(plot.Responses))
+        .attr('stroke', 'blue')
+        .attr('stroke-width', 1)
+        .attr('fill', 'none');
+    });
+    this.drawGraduationFrequencies(svg);
+    this.drawSplLines(svg, this.settings.SplDisplacementLow, this.settings.SplDisplacementHi, this.yScaleSplDisplacement );
   }
 
   drawGraduationFrequencies(svg) {
@@ -148,7 +203,9 @@ export class PlotsComponent implements OnInit {
   }
 
   drawSplLines(svg, low, hi, yScale) {
-    for (let db = low; db <= hi; db += 5 ) {
+    const jumps =  Math.min(Math.ceil((hi - low) / 10), 10);
+
+    for (let db = low; db <= hi; db += jumps ) {
       svg.append('line')
         .style('stroke', 'black')
         .style('opacity', 0.1)

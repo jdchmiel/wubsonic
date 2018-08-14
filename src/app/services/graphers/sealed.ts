@@ -1,11 +1,10 @@
 import { Driver, Box, Plot, Response} from '../../wubTypes';
 import { Injectable } from '@angular/core';
+import { SettingsService } from '../../services/settings.service';
 
 
 
 const Qlist = [0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.4, 1.6, 2],
-    Frequencies = [1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130,
-       140, 150, 160, 170, 180, 190, 200, 300, 400, 800, 1000, 2000, 4000, 8000, 10000, 20000],
     c = 345,        // speed of sound in air (345 m/s)
     Ro = 1.18;      // density of air (1.18 kg/m^3)
 
@@ -13,7 +12,7 @@ const Qlist = [0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.4, 1.6, 2],
 
 export class SealedGrapher {
 
-  constructor() { }
+  constructor( private settings: SettingsService) { }
 
 
   /**
@@ -52,7 +51,8 @@ export class SealedGrapher {
     boxes = this.calcBoxes(driver);
     boxes.forEach(box => {
       const
-        Vd = driver.Sd * driver.Xmax / 10000,
+        Vd = driver.Sd * driver.Xmax / 1000,
+        // 9.64*10^(-10)*Fs^3*Vas/Qes
         n0 = 9.64 * Math.pow(10, -10) * Math.pow(driver.Fs, 3) * driver.Vas / driver.Qes,
         SPL = 112 + 10 * Math.log10(n0),
         // (4*pi^3*Ro/c)*Fb^4*Vd^2
@@ -65,7 +65,7 @@ export class SealedGrapher {
         Per = Par / n0,
         PeakSPL = SPL + 10 * Math.log10(driver.PEmax);
       const Responses: Array<Response> = [];
-      Frequencies.forEach(F => {
+      this.settings.Frequencies.forEach(F => {
         const Fr = Math.pow(F / box.Fb, 2),
           dBmag = 10 * Math.log10(Math.pow(Fr, 2) / (Math.pow(Fr - 1, 2) + Fr / Math.pow(box.Qtc, 2))),
           // = 10*LOG(Fr^2/((Fr-1)^2+Fr/Qtc^2))

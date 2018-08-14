@@ -6,11 +6,11 @@
 Spl Thermal Low <input type="range" (input) = 'doRefresh();' id="SplThermalLow" name="SplThermalLow" min="50" max="90" [(ngModel)]="settings.SplThermalLow" step="1" /><br/>
 Spl Thermal Hi <input type="range" (input) = 'doRefresh();' id="SplThermalHi" name="SplThermalHi" min="100" max="150" [(ngModel)]="settings.SplThermalHi" step="1" /><br/>
 
-Watts Low<input type="range" (input) = 'doRefresh();' id="PMaxlow" name="PMaxlow" min="1" max="90" [(ngModel)]="settings.SplPowerMaxLow" step="1" /><br/>
-Watts Hi<input type="range" (input) = 'doRefresh();' id="PMaxHi" name="PMaxHi" min="100" max="1000" [(ngModel)]="settings.SplPowerMaxHi" step="20" /><br/>
+Watts Low<input type="range" (input) = 'doRefresh();' id="PowerMaxLow" name="PowerMaxLow" min="1" max="90" [(ngModel)]="settings.PowerMaxLow" step="1" /><br/>
+Watts Hi<input type="range" (input) = 'doRefresh();' id="PowerMaxHi" name="PowerMaxHi" min="100" max="1000" [(ngModel)]="settings.PowerMaxHi" step="20" /><br/>
 
-dBmag Low <input type="range" (input) = 'doRefresh();' id="dBmagLow" name="dBmagLow" min="50" max="90" [(ngModel)]="dBmagLow" step="2" /><br/>
-dBmag Hi <input type="range" (input) = 'doRefresh();' id="dBmagHi" name="dBmagHi" min="100" max="150" [(ngModel)]="dBmagHi" step="2" /><br/>
+dB Magnitude Low <input type="range" (input) = 'doRefresh();' id="DbMagnitudeLow" name="DbMagnitudeLow" min="-50" max="0" [(ngModel)]="settings.DbMagnitudeLow" step="2" /><br/>
+dB Magnitude Hi <input type="range" (input) = 'doRefresh();' id="DbMagnitudeHi" name="DbMagnitudeHi" min="0" max="50" [(ngModel)]="settings.DbMagnitudeHi" step="2" /><br/>
 
 SPLd Low <input type="range" (input) = 'doRefresh();' id="SPLdLow" name="SPLdLow" min="50" max="90" [(ngModel)]="SPLdLow" step="2" /><br/>
 SPLd Hi <input type="range" (input) = 'doRefresh();' id="SPLdlow" name="SPLdlow" min="100" max="150" [(ngModel)]="SPLdlow" step="2" /><br/>

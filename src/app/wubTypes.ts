@@ -15,7 +15,7 @@ export interface Response {
 }
 
 export interface Box {
-  Qtc: number;    // Final Q of the system at resonance
+  Qtc?: number;    // Final Q of the system at resonance
   Fb: number;     // resonance frequency of the system
   F3: number;     // -3dB frequency (Hz)
   Vb: number;     // net box volume (litres)
@@ -29,7 +29,6 @@ export interface Driver {
   Qts: number;    // total Q of the driver at Fs
   Fs: number;     // resonance frequency of driver (Hz)
   PEmax: number;  // maximum input power for driver (W)
- // Fb: number;     // resonance frequency of the system (Hz)
   Sd: number;     // effective surface area (cone + 1/3 surround) (cm^3)
   Xmax: number;   // peak linear displacement of cone (mm)
 }
