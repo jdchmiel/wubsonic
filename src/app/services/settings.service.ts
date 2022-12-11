@@ -26,7 +26,7 @@ export class SettingsService {
     // load defaults here
     this.SplThermalLow = 70;
     this.SplThermalHi = 120;
-    this.PowerMaxLow = 1; //TODO convert these names to watts, not SPL
+    this.PowerMaxLow = 1; // TODO convert these names to watts, not SPL
     this.PowerMaxHi = 100;
     this.DbMagnitudeLow = -20;
     this.DbMagnitudeHi = 20;

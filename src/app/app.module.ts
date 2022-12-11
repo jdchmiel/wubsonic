@@ -12,6 +12,7 @@ import { PlotsComponent } from './components/plots/plots.component';
 import { SealedGrapher } from './services/graphers/sealed';
 import { SettingsService } from './services/settings.service';
 import { PortedGrapher } from './services/graphers/ported';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { PortedGrapher } from './services/graphers/ported';
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [
     SealedGrapher,
